@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>10-Day Weather Forecast</title>
+        <link rel="stylesheet" href="/css/styles.css">
+    </head>
+
+    <body>
+        <%- include('partials/header') %>
+
+            <div class="container">
+                <h2>10-Day Weather Forecast</h2>
+                <form action="/forecast" method="get">
+                    <input type="text" name="city" placeholder="Enter city" value="<%= locals.city ? city : '' %>">
+                    <button type="submit">Get Forecast</button>
+                </form>
+
+                <% if (error) { %>
+                    <p class="error">
+                        <%= error %>
+                    </p>
+                    <% } %>
+
+                        <% if (locals.forecastData) { %>
+                            <h3>Weather Forecast for <%= city %>
+                            </h3>
+                            <div class="forecast-container">
+                                <% forecastData.forEach(function(day, index) { %>
+                                    <div class="forecast-day">
+                                        <p>
+                                            <%= new Date(day.dt * 1000).toDateString() %>
+                                        </p>
+                                        <p>Temperature: <%= day.temp.day %>°C</p>
+                                        <p>Condition: <%= day.weather[0].description %>
+                                        </p>
+                                    </div>
+                                    <% }); %>
+                            </div>
+                            <% } %>
+            </div>
+    </body>
+
+</html>
