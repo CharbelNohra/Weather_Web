@@ -1,36 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather App</h1>
+        <form action="/weather" method="get">
+            <input type="text" name="city" placeholder="Enter city" required>
+            <button type="submit">Get Weather</button>
+        </form>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Weather App</title>
-        <link rel="stylesheet" href="/css/styles.css">
-    </head>
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
 
-    <body class="<%= locals.weatherData ? weatherData.weather[0].main.toLowerCase() : '' %>">
-        <%- include('partials/header') %>
-        <div class="container">
-            <h1>Weather App</h1><br>
-            <form action="/weather" method="get">
-                <input type="text" name="city" placeholder="Enter city">
-                <button type="submit">Get Weather</button>
-            </form>
+        <% if (weather) { %>
+            <div class="current-weather">
+                <h2>Current Weather in <%= weather.name %></h2>
+                <p>Temperature: <%= weather.main.temp %> °C</p>
+                <p>Weather: <%= weather.weather[0].description %></p>
+                <img src="http://openweathermap.org/img/wn/<%= weather.weather[0].icon %>@2x.png" alt="Weather Icon">
+            </div>
+        <% } %>
 
-            <% if (error) { %>
-                <p class="error">
-                    <%= error %>
-                </p>
-                <% } %>
-
-                    <% if (locals.weatherData) { %>
-                        <h2>Weather in <%= weatherData.name %>
-                        </h2>
-                        <p>Temperature: <%= weatherData.main.temp %>°C</p>
-                        <p>Condition: <%= weatherData.weather[0].description %>
-                        </p>
-                        <% } %>
-        </div>
-    </body>
-
+        <% if (forecast && forecast.length > 0) { %>
+            <h2>5-Day Forecast</h2>
+            <div class="forecast-grid">
+                <% forecast.forEach(day => { %>
+                    <div class="forecast-item">
+                        <h3><%= new Date(day.dt_txt).toDateString() %></h3>
+                        <p>Temperature: <%= day.main.temp %> °C</p>
+                        <p>Weather: <%= day.weather[0].description %></p>
+                        <img src="http://openweathermap.org/img/wn/<%= day.weather[0].icon %>@2x.png" alt="Weather Icon">
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+</body>
 </html>
